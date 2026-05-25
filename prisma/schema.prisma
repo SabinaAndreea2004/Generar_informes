@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Client {
+  id             Int                 @id @default(autoincrement())
+  nombre         String              @db.VarChar(255)
+  correo         String              @unique @db.VarChar(255)
+  dni            String              @unique @db.VarChar(50)
+  url            String              @db.VarChar(500)
+  activo         Boolean             @default(true)
+  reports        MaintenanceReport[]
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+
+  @@map("clients")
+}
+
+model MaintenanceReport {
+  id         Int       @id @default(autoincrement())
+  clientId   Int
+  client     Client    @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  wpVersion  String?   @db.VarChar(20)
+  siteName   String?   @db.VarChar(255)
+  tasksData  Json
+  notes      String?   @db.Text
+  sentAt     DateTime  @default(now())
+
+  @@map("maintenance_reports")
+}
