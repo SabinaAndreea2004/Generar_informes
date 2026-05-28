@@ -3,18 +3,19 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
 model Client {
   id             Int                 @id @default(autoincrement())
-  nombre         String              @db.VarChar(255)
-  correo         String              @unique @db.VarChar(255)
-  dni            String              @unique @db.VarChar(50)
-  url            String              @db.VarChar(500)
+  nombre         String
+  correo         String              @unique
+  dni            String              @unique
+  url            String
   activo         Boolean             @default(true)
   reports        MaintenanceReport[]
+  monthlyMaintenance MonthlyMaintenance[]
   createdAt      DateTime            @default(now())
   updatedAt      DateTime            @updatedAt
 
@@ -25,11 +26,29 @@ model MaintenanceReport {
   id         Int       @id @default(autoincrement())
   clientId   Int
   client     Client    @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  wpVersion  String?   @db.VarChar(20)
-  siteName   String?   @db.VarChar(255)
-  tasksData  Json
-  notes      String?   @db.Text
+  wpVersion  String?
+  siteName   String?
+  tasksData  String
+  notes      String?
   sentAt     DateTime  @default(now())
 
   @@map("maintenance_reports")
+}
+
+model MonthlyMaintenance {
+  id         Int       @id @default(autoincrement())
+  clientId   Int
+  client     Client    @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  year       Int
+  month      Int
+  wpVersion  String?
+  plugins    String
+  notes      String?
+  closed     Boolean   @default(false)
+  closedAt   DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@unique([clientId, year, month])
+  @@map("monthly_maintenance")
 }

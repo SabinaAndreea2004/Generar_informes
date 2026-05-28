@@ -7,8 +7,8 @@ export interface Client {
   dni: string;
   url: string;
   activo: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface SiteCheckData {

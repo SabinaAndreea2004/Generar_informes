@@ -2,15 +2,15 @@
 
 import dynamic from "next/dynamic";
 
-const SinglePageDashboard = dynamic(
-  () => import("@/components/SinglePageDashboard"),
+const DashboardShell = dynamic(
+  () => import("@/components/DashboardShell"),
   { ssr: false }
 );
 
 export default function Home() {
   return (
-    <main style={{ minHeight: "100vh", background: "#f8fafc" }}>
-      <SinglePageDashboard />
+    <main className="min-h-screen bg-slate-50">
+      <DashboardShell />
     </main>
   );
 }
